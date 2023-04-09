@@ -1,8 +1,16 @@
-## Adding batching to the server
+Create a directory called `app` and place `main.py` (the server) and its dependencies (`wine.pkl`) there as explained in the FastAPI docs (https://fastapi.tiangolo.com/deployment/docker/) on how to deploy with Docker. The directory structure should look like this:
 
-Now that you saw how to code a webserver that serves a model for inference it is time to implement some code that allows for getting predictions in batch. This is very important because right now your server can only handle one prediction per request and you are losing this feature that most machine learning predictors have been optimized to perform.
-
-Begin the `cd`ing into the `with-batch` directory. If you are currently within the `no-batch` directory you can use the command `cd ../with-batch`.
+```
+..
+└── wine_classification_project
+    ├── app/
+    │   ├── main.py (server code)
+    │   └── wine.pkl (serialized classifier)
+    ├── requirements.txt (Python dependencies)
+    ├── wine-examples/ (wine examples to test the server)
+    ├── README.md (this file)
+    └── Dockerfile
+```
 
 ## Update the server
 
