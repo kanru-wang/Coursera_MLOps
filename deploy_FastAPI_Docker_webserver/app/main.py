@@ -12,6 +12,7 @@ class Wine(BaseModel):
     batches: List[conlist(item_type=float, min_items=13, max_items=13)]
 
 
+# The function is run at the startup of the server
 @app.on_event("startup")
 def load_clf():
     # Load classifier from pickle file
@@ -25,6 +26,7 @@ def home():
     return "Congratulations! Your API is working as expected. This new version allows for batching. Now head over to http://localhost:81/docs"
 
 
+# The function is run when visiting the /predict endpoint of the server and it expects a Wine data point.
 @app.post("/predict")
 def predict(wine: Wine):
     batches = wine.batches
