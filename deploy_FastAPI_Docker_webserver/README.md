@@ -1,3 +1,5 @@
+## Directory Structure for FastAPI in Docker
+
 Create a directory called `app` and place `main.py` (the server) and its dependencies (`wine.pkl`) there as explained in the FastAPI docs (https://fastapi.tiangolo.com/deployment/docker/) on how to deploy with Docker. The directory structure should look like this:
 
 ```
@@ -12,21 +14,37 @@ Create a directory called `app` and place `main.py` (the server) and its depende
     └── Dockerfile
 ```
 
-## Update the server
+## Create the Dockerfile
 
-Remember that this code can be find within the `app/main.py` file.
+```Dockerfile
+FROM frolvlad/alpine-miniconda3:python3.7
 
-First of all you will need two extra imports to handle prediction by batches. Both are related to handling list-like data. These are `List` from `typing` and `conlist` from `pydantic`. Remember that `REST` does not support objects like numpy arrays so you need to serialize this kind of data into lists. The imports will now look like this:
+COPY requirements.txt .
 
-```python
-import pickle
-import numpy as np
-from typing import List
-from fastapi import FastAPI
-from pydantic import BaseModel, conlist
+RUN pip install -r requirements.txt && \
+	rm requirements.txt
+
+EXPOSE 80
+
+COPY ./app /app
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
 ```
 
-Now you will modify the `Wine` class. It used to represent a wine but now it will represent a batch of wines. To accomplish this you can set the attribute `batches` and specify that it will be of type `List` of `conlist`s. Since FastAPI enforces types of objects you need to explicitly specify them. In this case you know that the batch will be a list of arbitrary size but you also need to specify the type of the elements within that list. You could do a List of Lists of floats but there is a better alternative, using pydantic's conlist. The "con" prefix stands for `constrained`, so this is a constrained list. This type allows you to select the type of the items within the list and also the maximum and minimum number of items. In this case your model was trained using 13 features so each data point should be of size 13:
+- The base image is `frolvlad/alpine-miniconda3:python3.7`:
+    - `frolvlad` is the username of the author of the image.
+    - `alpine-miniconda3` is its name.
+    - `python3.7` is the image's tag.
+- Copy the local `requirements.txt` file into the image so it can be accessed by other processes
+- Install Python libraries
+    - Remove `requirements.txt` because there is no more use for that file. The image includes only the necessary files for the server to run.
+    - It is a good practice to chain together commands using the `&&` operator since Docker creates a new layer every time it encounters a `RUN`, `COPY` or `ADD` instruction, which results in a bigger image size.
+- In this case, the server listens to requests on port 80.
+- Use the `COPY` instruction to copy the `app` directory within the root of the container
+
+## Server code
+
+The "con" prefix stands for `constrained`, so this is a constrained list. This type allows selecting the type of the items within the list and also the maximum and minimum number of items. In this case the model was trained using 13 features so each data point should be of size 13:
 
 ```python
 # Represents a batch of wines
@@ -34,11 +52,9 @@ class Wine(BaseModel):
     batches: List[conlist(item_type=float, min_items=13, max_items=13)]
 ```
 
-Notice that you are not explicitly naming each feature so in this case the **order of the data matters**.
+Notice that there is not explicit naming for each feature so the **order of the data matters**.
 
-Finally you will update the `predict` endpoint since loading the classifier is the same as in the case without batching. 
-
-Since scikit-learn accepts batches of data represented by numpy arrays you can simply get the batches from the `wine` object, which are lists, and convert it to numpy arrays before feeding it to the classifier. Once again you need to convert the predictions to a list to make them REST-compatible:
+Since scikit-learn accepts batches of data represented by numpy arrays, simply get the batches from the `wine` object, which are lists, and convert it to numpy arrays before feeding it to the classifier. At the end, need to convert the predictions to a list to make them REST-compatible:
 
 ```python
 @app.post("/predict")
@@ -49,66 +65,50 @@ def predict(wine: Wine):
     return {"Prediction": pred}
 ```
 
-With these minor changes your server is now ready to accept batches of data! Pretty cool!
+## Building the image
 
-## Building a new version of the image
-
-The Dockerfile for this new version of the server is identical to the previous one. The only changes were done within the `main.py` file so the Dockerfile remains the same.
-
-Now, while on the `with-batch` directory run the docker build command:
+While on the `with-batch` directory run the docker build command:
 
 ```bash
 docker build -t mlepc4w2-ugl:with-batch . 
 ```
 
-Since the initial layers are identical to the ones of the previous image, the build process should be fairly quick. This is another great feature of Docker called `layer caching`, which caches layers for newer builds to yield lower build times.
-
-Notice that the image name stays the same, but the tag changed to specify that this version of the server supports batching.
+Use the `-t` flag to specify the name of the image and its tag. In this case the name is `mlepc4w2-ugl` and the tag is `with-batch`.
 
 ## Cleaning things up
 
-To check out the two images you have created you can use the following command:
+To check out the image created:
 
 ```bash
 docker images
 ```
 
-Sometimes when checking all of your available images you will stumble upon some images with names and tags that have the value of `none`. These are intermediate images and if you see them listed when using the `docker images` command it is usually a good practice to prune them. 
+Any image with name and tag of `none` is an intermediate image and it is a good practice to prune them. 
 
-Another way to check if you have these images in your system is to run this command:
-
-```bash
-$(docker images --filter "dangling=true" -q --no-trunc)
-```
-
-If there is no output it means there where no such images. In case there were some you can prune them by running the following command:
+Prune them by running the following command:
 
 ```bash
 docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
 ```
 
-Now if you run again the `docker images` command you should not see those intermediate images. Things are much cleaner now!
-
-
 ## Running the server
 
-Now you can run a container out of the image using the following command:
+Run a container out of the image using the following command:
 
 ```bash
-docker run --rm -p 81:80 mlepc4w2-ugl:with-batch 
+docker run --rm -p 80:80 mlepc4w2-ugl:with-batch 
 ```
 
-Notice that this time, port 80 within the container maps to port 81 in your local host. This is because you probably haven't stopped the server from part 1 of this lab which is still running on port 80. It also serves to showcase how port mapping can be use to map from any port in the container to any port in the host.
+- `--rm`: Delete this container after stopping running it, to avoid having to manually delete the container. Deleting unused containers helps the system to stay clean and tidy.
+- `-p 80:80`: This flags performs a port mapping operation (local_machine_host_port:container_port). The container and the local machine each has its own set of ports. To access the port 80 within the container, need to map it to a port on the computer.
 
-Now head over to [localhost:81](http://localhost:81) and you should see a message about the server spinning up correctly.
-
-
+Go to [localhost:80](http://localhost:80). Should see a message about the server spinning up correctly.
 
 ## Make requests to the server
 
-Once again it is time to test your server by actually using it for prediction. In the same manner as before there are some examples of batches of data within the `wine-examples` directory. 
+There are some examples of batches of data within the `wine-examples` directory. 
 
-To get the predictions for a batch of 32 wines (found in the batch_1.json file) you can send a `POST` request to the server using `curl` like this:
+To get the predictions for a batch of 32 wines (found in the batch_1.json file), send a `POST` request to the server using `curl` like this:
 
 ```bash
 curl -X POST http://localhost:81/predict \
@@ -116,20 +116,14 @@ curl -X POST http://localhost:81/predict \
     -H "Content-Type: application/json"
 ```
 
-Now you should see a list with the 32 predictions (in order) for each one of the data points within the batch. **Nice work!**
+- `-X`: Allows specifing the request type. In this case it is a `POST` request.
+- `-d`: Stands for `data` and allows attaching data to the request.
+- `-H`: Stands for `Headers` and allows passing additional information through the request. In this case it is used to the tell the server that the data is sent in a `JSON` format.
+
+Should see a list with the 32 predictions (in order) for each one of the data points within the batch.
 
 ## Stopping the servers
 
-To step to servers and the containers they are running in, simply use the key combination `ctrl + c` in the terminal window where you started the process.
+`ctrl + c` to step to servers and the containers.
 
-Alternatively you can use the `docker ps` command to check the name of the running containers and use the `docker stop name_of_container` command to stop them. Remember that you used the `--rm` flag so once you stop these containers they will also be deleted.
-
-**Do not delete the images you created since they will be used in an upcoming lab!**
-
------
-
-**Congratulations on finishing this ungraded lab!**
-
-Now you should have a better understanding of how web servers can be used to host your machine learning models. You saw how you can use a library such as FastAPI to code the server and use Docker to ship your server along with your model in an easy manner. You also learned about some key concepts of Docker such as `image tagging` and `port mapping` and how  to allow for batching in the requests. In general you should have a clearer idea of how all these technologies interact to host models in production.
-
-**Keep it up!**
+Use the `docker ps` command to check the name of the running containers and use the `docker stop name_of_container` command to stop them. Can use the `--rm` flag, so once stopped, these containers will also be deleted.
