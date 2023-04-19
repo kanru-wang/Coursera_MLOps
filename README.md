@@ -1,4 +1,35 @@
-Model server
+## MLOps
+
+https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning
+
+- CI is no longer only about testing and validating code and components, but also testing and validating data, data schemas, and models.
+- CD is no longer about a single software package or a service, but a system (an ML training pipeline) that should automatically deploy another service (model prediction service).
+- CT: automatically retraining and serving the models.
+
+https://neptune.ai/blog/mlops
+
+- The model is automatically trained (Continuous Training) in production
+  - Based on triggers (e.g. on-demand, on a schedule, upon new data availability, upon model degradation, or upon significant changes in the data distribution)
+  - Have automated data validation and model validation steps, so that models can be automatically trained
+- Same pipeline used in Development and Production
+- Containerizing components (e.g. package data pre-processing or model training code as a Docker image)
+  - Decouple the execution environment from the custom code runtime
+  - Make code reproducible between development and production environments
+  - Isolate each component in the pipeline. Components can have different runtime environment, different languages and libraries, and cannot directly share in-memory data.
+- The model deployment is automated (Continuous Delivery)
+- Deploy a whole training pipeline, not just a trained model
+- Use feature store for standardizing the definition, storage, and access of features for training and serving
+- Information about each execution is recorded for data and artifacts lineage, reproducibility, comparison and debugging
+- Tools:
+  - Amazon Sagemaker to build, train, deploy, and monitor machine learning models
+  - Google Cloud MLOps suite:
+    - Dataflow to extract, validate, transform data, and evaluate models
+    - Cloud Build to build and test machine learning pipelines
+    - TFX to deploy ML pipelines (for TensorFlow only)
+    - Kubeflow to deploy ML pipelines (for TensorFlow, PyTorch, XGBoost)
+
+## Model server
+
 - A model server instantiate the model and expose the model’s methods. It exposes its API (REST or RPC interface) to the clients.
 - The model server receives this data, formats it into the required shape, passes it to the model file and gets the inference back. 
 - It can also manage multiple model versions in the case of A/B testing.
