@@ -4,7 +4,7 @@ Create a directory called `app` and place `main.py` (the server) and its depende
 
 ```
 ..
-└── wine_classification_project
+└── deploy_FastAPI_Docker_webserver
     ├── app/
     │   ├── main.py (server code)
     │   └── wine.pkl (serialized classifier)
@@ -67,13 +67,13 @@ def predict(wine: Wine):
 
 ## Building the image
 
-While on the `with-batch` directory run the docker build command:
+While on the `deploy_FastAPI_Docker_webserver` directory run the docker build command:
 
 ```bash
-docker build -t mlepc4w2-ugl:with-batch . 
+docker build -t mlepc4w2-ugl:deploy_FastAPI_Docker_webserver . 
 ```
 
-Use the `-t` flag to specify the name of the image and its tag. In this case the name is `mlepc4w2-ugl` and the tag is `with-batch`.
+Use the `-t` flag to specify the name of the image and its tag. In this case the name is `mlepc4w2-ugl` and the tag is `deploy_FastAPI_Docker_webserver`.
 
 ## Cleaning things up
 
@@ -96,7 +96,7 @@ docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
 Run a container out of the image using the following command:
 
 ```bash
-docker run --rm -p 80:80 mlepc4w2-ugl:with-batch 
+docker run --rm -p 80:80 mlepc4w2-ugl:deploy_FastAPI_Docker_webserver
 ```
 
 - `--rm`: Delete this container after stopping running it, to avoid having to manually delete the container. Deleting unused containers helps the system to stay clean and tidy.
