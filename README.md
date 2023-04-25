@@ -28,6 +28,11 @@ https://neptune.ai/blog/mlops
     - TFX to deploy ML pipelines (for TensorFlow only)
     - Kubeflow to deploy ML pipelines (for TensorFlow, PyTorch, XGBoost)
 
+- Unit testing input data
+  - If features are scaled or normalized correctly
+  - If one-hot values and embedding are generated and used correctly
+  - Correct data types, not empty, and in the right range
+
 ## Model server
 
 - A model server instantiate the model and expose the model’s methods. It exposes its API (REST or RPC interface) to the clients.
