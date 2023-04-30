@@ -25,12 +25,12 @@ To give you an idea of the flexibility of this tool, you could also (although no
 
 Forking a repo is simply creating your own copy of it. It is often used in Open Source development as a way of keeping everything tidy. Instead of working directly on a public repo (in which you probably won't have writing access) you can work on your fork and submit Pull Requests from it. To fork a repo just click on the `Fork` button on the top right corner of the repo:
 
-![fork-repo](../../assets/fork-repo.png)
+![fork-repo](../assets/fork-repo.png)
 
 
 Once the forking process has been completed you should have a copy of the repo registered under your username, like this:
 
-![your-fork](../../assets/your-fork.png)
+![your-fork](../assets/your-fork.png)
 
 Now you need to clone it into your local machine. You can do so by using these commands (be sure to replace the username used here for your own):
 
@@ -47,11 +47,11 @@ If you are unsure which method to use for cloning, use the first one.
 
 Now you need to enable Actions for your fork. You can do so by clicking on the Actions button:
 
-![action-button](../../assets/action-button.png)
+![action-button](../assets/action-button.png)
 
 And clicking the green button to enable Actions:
 
-![enable-actions](../../assets/enable-actions.png)
+![enable-actions](../assets/enable-actions.png)
 
 ## Navigating the fork
 
@@ -219,21 +219,21 @@ With the push the CI/CD pipeline should have been triggered. To see it in action
 
 Here you will see all of the runs of the workflows you have set up. Right now you should see a run that looks like this (notice that the name is the same as the commit message):
 
-![workflow-run](../../assets/workflow-run.png)
+![workflow-run](../assets/workflow-run.png)
 
 You can click on the name of this run to see a summary of the jobs that made it up. If you do so you will see there is only the job `test` that you defined in the `YAML` file:
 
-![job](../../assets/job.png)
+![job](../assets/job.png)
 
 Now you can click once again the job to see a detailed list of all the steps of that job:
 
-![steps](../../assets/steps.png)
+![steps](../assets/steps.png)
 
 Notice that these steps are the sames you defined in the configuration file plus some automatically added by GitHub.
 
 This Action takes around 40 seconds to complete so by now it should have finished. Click again on the `Actions` button to see the list of workflow runs and you should see the run accompanied by a green icon showing that all tests passed successfully:
 
-![good-run](../../assets/good-run.png)
+![good-run](../assets/good-run.png)
 
 You just run your own CI/CD pipeline! Pretty cool!
 
@@ -263,12 +263,12 @@ Once the change is saved, use git to push the changes as before. Use the followi
 
 With the push the CI/CD pipeline should have been triggered again. Once again go into the browser and check it. This time you will find that the tests failed. This can be done by the red icon next to the run:
 
-![bad-run](../../assets/bad-run.png)
+![bad-run](../assets/bad-run.png)
 
 So, what happened?
 You can dig deeper by going into the job and then into the steps that made it up. You should see something like this:
 
-![error-detail](../../assets/error-detail.png)
+![error-detail](../assets/error-detail.png)
 
 The unit test failed because this new model has an accuracy lower to 90%. This happened because due to some miscommunication between teams, the Data Science team did not provide a `sklearn.pipeline.Pipeline` which first step is a `sklearn.preprocessing.StandardScaler`, but only the model since they expected the test data to be already scaled.
 
