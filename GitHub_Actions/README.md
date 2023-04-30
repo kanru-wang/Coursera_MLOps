@@ -3,7 +3,7 @@
 #### Unit test example
 
 ```yml
-name: unit-test-example
+name: Unit test example
 
 # Controls when the action will run
 on:
