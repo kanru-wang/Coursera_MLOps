@@ -33,7 +33,7 @@ https://neptune.ai/blog/mlops
   - If one-hot values and embedding are generated and used correctly
   - Correct data types, not empty, and in the right range
 
-## Model server
+## Model Server
 
 - A model server instantiate the model and expose the model’s methods. It exposes its API (REST or RPC interface) to the clients.
 - The model server receives this data, formats it into the required shape, passes it to the model file and gets the inference back. 
