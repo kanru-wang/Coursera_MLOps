@@ -49,3 +49,13 @@ Using TensorFlow Serving (TFS) without using Docker
 -	Load a trained model into TFS by saving it in SavedModel format
 -	Spin up TFS server, with the path to the model directory provided
 -	Post data in JSON format via a REST request and get the prediction
+
+## Canary Releases on Kubernetes
+From https://www.cloudskillsboost.google/focuses/18471?parent=catalog
+
+- A service mesh is a dedicated infrastructure layer that controls service-to-service communication over a network.
+- Use Workload Identity to authorize pods in Google Cloud Kubernetes Engine clusters to access other Google Cloud Services.
+- Deploy TF Serving in three steps:
+1. Create a Kubernetes ConfigMap that points to the location of the model in a storage bucket
+2. Create a Kubernetes Deployment using a standard TensorFlow Serving image from Docker Hub
+3. Provide an interface to the model deployment. Use an Istio Ingress gateway to control traffic entering and leaving the mesh. Istio virtual service forwards/splits traffic from the Istio Ingress gateway to Kubernetes service. Kubernetes service does load balancing between pods.
