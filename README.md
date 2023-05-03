@@ -50,6 +50,14 @@ Using TensorFlow Serving (TFS) without using Docker
 -	Spin up TFS server, with the path to the model directory provided
 -	Post data in JSON format via a REST request and get the prediction
 
+## Degree of Automation
+
+- Human only
+- Shadow mode (model shadows human; model outputs not used for any decisions)
+- AI assistance (model giving hints to human)
+- Partial automation (model giving uncertain samples to human)
+- Full automation (e.g. Canary Deployment (starting small and ramp up), Blue Green Deployment (two models running; easy to switch to the old model))
+
 ## Canary Releases on Kubernetes
 From https://www.cloudskillsboost.google/focuses/18471?parent=catalog
 
