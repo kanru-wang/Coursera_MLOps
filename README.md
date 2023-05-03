@@ -38,6 +38,7 @@ https://neptune.ai/blog/mlops
 - A model server instantiate the model and expose the model’s methods. It exposes its API (REST or RPC interface) to the clients.
 - The model server receives this data, formats it into the required shape, passes it to the model file and gets the inference back. 
 - It can also manage multiple model versions in the case of A/B testing.
+- TensorFlow Serving (TFS) is good when working with Tensorflow; otherwise can use FastAPI.
 
 Using TensorFlow Serving (TFS) with Docker
 -	Pull the TFS docker image (contains all of the necessary dependencies to run TFS) from the Docker hub
