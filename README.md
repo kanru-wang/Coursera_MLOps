@@ -40,13 +40,13 @@ https://neptune.ai/blog/mlops
 - It can also manage multiple model versions in the case of A/B testing.
 - TensorFlow Serving (TFS) is good when working with Tensorflow; otherwise can use FastAPI.
 
-Using TensorFlow Serving (TFS) with Docker
+[Using TensorFlow Serving (TFS) with Docker](https://github.com/https-deeplearning-ai/machine-learning-engineering-for-production-public/blob/main/course4/week1-ungraded-labs/C4_W1_Lab_2_TFS_Docker.md)
 -	Pull the TFS docker image (contains all of the necessary dependencies to run TFS) from the Docker hub
 -	Clone the code repo of the model
 -	Run a container out of the image, so TFS will spin up and host the model
 -	Post data in JSON format via a REST request and get the prediction
 
-Using TensorFlow Serving (TFS) without using Docker
+[Using TensorFlow Serving (TFS) without using Docker](https://github.com/https-deeplearning-ai/machine-learning-engineering-for-production-public/blob/main/course4/week1-ungraded-labs/C4_W1_Lab_3_TFS.ipynb)
 -	Load a trained model into TFS by saving it in SavedModel format
 -	Spin up TFS server, with the path to the model directory provided
 -	Post data in JSON format via a REST request and get the prediction
