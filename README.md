@@ -68,3 +68,11 @@ From https://www.cloudskillsboost.google/focuses/18471?parent=catalog
 1. Create a Kubernetes ConfigMap that points to the location of the model in a storage bucket
 2. Create a Kubernetes Deployment using a standard TensorFlow Serving image from Docker Hub
 3. Provide an interface to the model deployment. Use an Istio Ingress gateway to control traffic entering and leaving the mesh. Istio virtual service forwards/splits traffic from the Istio Ingress gateway to Kubernetes service. Kubernetes service does load balancing between pods.
+
+## Focus more on the data than the model
+
+Prioritize which classificaton category to work on (e.g. collect more data of this category) based on:
+- How much room for improvement there is
+- How frequently that category appears
+- How easy it is to improve accuracy in that category
+- How important it is to improve in that category
