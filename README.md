@@ -71,7 +71,7 @@ From https://www.cloudskillsboost.google/focuses/18471?parent=catalog
 
 ## Focus more on the data than the model
 
-human_machine_performance_gap x category size =  potential room for improvement of that category
+`human_machine_performance_gap` x `category_size` =  potential room for improvement of that category
 
 Prioritize which classificaton category to work on (e.g. collect more data of this category) based on:
 - How much room for improvement there is
