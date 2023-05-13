@@ -71,8 +71,14 @@ From https://www.cloudskillsboost.google/focuses/18471?parent=catalog
 
 ## Focus more on the data than the model
 
+human_machine_performance_gap x category size =  potential room for improvement of that category
+
 Prioritize which classificaton category to work on (e.g. collect more data of this category) based on:
 - How much room for improvement there is
 - How frequently that category appears
 - How easy it is to improve accuracy in that category
 - How important it is to improve in that category
+
+The goal of data augmentation is to create realistic examples that (1) the algorithm does poorly on, but (2) are realistic, and (3) humans can do well on.
+
+For unstructured data ML tasks, adding more training data will not hurt the performance, unless (1) the model is small (low number of weights), or (2) the new data is ambiguous (even human cannot make accurate predictions).
