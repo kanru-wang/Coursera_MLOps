@@ -8,3 +8,7 @@ https://github.com/https-deeplearning-ai/machine-learning-engineering-for-produc
   - Executor - code for processing the inputs, outputs, and parameters
   - Component Class - puts everything together so your code can be run by the TFX runner
 - Run a TFX pipeline locally using a built-in pipeline orchestrator
+
+As a digression, TensorFlow Data Validation (TFDV) of TFX can:
+- Calculate descriptive statistics on two datasets, and visualize the differences
+- Infer data schema (e.g. data types, expected value range) for validating new data. The schema can be manually revised
